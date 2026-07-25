@@ -1,0 +1,24 @@
+# Configuración de Entorno
+.env
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de datos local (NO subir datos reales o de prueba a internet)
+data/*.db
+data/*.db.enc
+kardex.db
+kardex.db.enc
+kardex_app.db
+
+# Compilados de Ejecutables e Instaladores
+build/
+dist/
+*.spec
+*.zip
+Instalador/
+
+# PDFs generados (Vales, guías)
+*.pdf
