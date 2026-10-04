@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
 import threading
-from core.cloud_sync import NeonSyncEngine
+from core.services.cloud_sync import NeonSyncEngine
 
 class CloudSyncModal(ctk.CTkToplevel):
     def __init__(self, master, on_success_callback):

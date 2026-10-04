@@ -13,7 +13,7 @@ from ui.admin_views.recipe_view import RecipeView
 from ui.admin_views.gestor_view import GestorView
 from ui.admin_views.message_inbox_view import AdminMessageInboxView
 from ui.modals.cloud_sync_modal import CloudSyncModal
-from ui.theme import Theme
+from ui.components.theme import Theme
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

@@ -135,7 +135,7 @@ class RecipeView(ctk.CTkFrame):
     def _imprimir_receta(self, receta):
         try:
             from core.database import get_connection
-            from core.pdf_generator import PDFGenerator
+            from core.services.pdf_generator import PDFGenerator
             from tkinter.filedialog import asksaveasfilename
             import os
             
@@ -198,7 +198,7 @@ class RecipeView(ctk.CTkFrame):
         self.entry_qty = ctk.CTkEntry(row_inputs, width=80, placeholder_text="Cant.", text_color="white" if self.modo=="Dark" else "black")
         self.entry_qty.pack(side="left", padx=5)
         
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         ctk.CTkButton(row_inputs, text="➕ Añadir", width=80, font=("Segoe UI", 12, "bold"), fg_color=Theme.PRIMARY, hover_color=Theme.PRIMARY_HOVER, corner_radius=8, command=self._add_ingredient).pack(side="left", padx=5)
         # Lista de ingredientes actual
         self.list_frame = ctk.CTkScrollableFrame(self.detalle_frame, fg_color="transparent", height=150)

@@ -22,7 +22,7 @@ class AuditView(ctk.CTkFrame):
         ctk.CTkLabel(titulo_frame, text="Auditoria de Operarios", font=("Segoe UI", 26, "bold"), text_color="#3B82F6").pack(anchor="w", pady=(0, 5))
         ctk.CTkLabel(titulo_frame, text="Rastrea todos los movimientos y envia citaciones a operarios.", font=("Segoe UI", 14), text_color="#64748B").pack(anchor="w")
 
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         ctk.CTkButton(top_panel, text="✍️ Redactar Memorandum General", font=("Segoe UI", 13, "bold"), fg_color=Theme.PURPLE, hover_color=Theme.PURPLE_HOVER, height=45, command=self._abrir_redactor_general).pack(side="right", padx=10)
         ctk.CTkButton(top_panel, text="📊 Exportar Kardex a Excel", font=("Segoe UI", 13, "bold"), fg_color=Theme.SUCCESS, hover_color=Theme.SUCCESS_HOVER, height=45, command=self._exportar_kardex).pack(side="right", padx=10)
 

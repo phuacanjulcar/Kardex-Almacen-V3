@@ -4,7 +4,7 @@ import json
 import uuid
 from datetime import datetime
 from tkinter import simpledialog, messagebox
-from core.kardex_manager import KardexManager
+from core.managers.kardex_manager import KardexManager
 from core.database import get_connection
 
 class InboxView(ctk.CTkFrame):
@@ -35,7 +35,7 @@ class InboxView(ctk.CTkFrame):
             variable=self.filtro_var, 
             command=self._cargar_lista_pendientes
         )
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         Theme.apply_segmented_button_style(self.filtro_btn)
         self.filtro_btn.pack(fill="x", padx=15, pady=15)
 

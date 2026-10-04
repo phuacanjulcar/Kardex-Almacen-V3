@@ -15,7 +15,7 @@ class ExitWindow:
         self.win.attributes("-alpha", 0.0) # Start invisible
         self.win.grab_set()
 
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         self.win.configure(fg_color=Theme.BG_GENERAL)
 
         self.lotes_disp = [l for l in self.manager.inventory_lots if l.get("status", "Disponible") == "Disponible"]
@@ -49,7 +49,7 @@ class ExitWindow:
             
         self.lote_sel_var = ctk.StringVar(value=list(self.lotes_dict.keys())[0])
 
-        from ui.tooltip import crear_label_con_ayuda
+        from ui.components.tooltip import crear_label_con_ayuda
         
         crear_label_con_ayuda(form, "Lote / Paquete a Descontar", "El grupo específico de productos del cual se restarán unidades. El sistema sugiere siempre el más próximo a vencer (FEFO).", font=("Segoe UI", 13, "bold"), text_color=Theme.PRIMARY).pack(anchor="w")
         ctk.CTkLabel(form, text="* El sistema te sugiere el mas proximo a vencer", font=("Segoe UI", 10, "italic"), text_color=Theme.DANGER).pack(anchor="w")

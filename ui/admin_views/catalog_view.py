@@ -25,7 +25,7 @@ class CatalogView(ctk.CTkFrame):
         header_lista = ctk.CTkFrame(lista_frame, fg_color="transparent")
         header_lista.pack(fill="x", padx=15, pady=10)
         ctk.CTkLabel(header_lista, text="Inventario Maestro", font=("Segoe UI", 14, "bold")).pack(side="left")
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         ctk.CTkButton(header_lista, text="➕ Nuevo", width=80, height=30, font=("Segoe UI", 12, "bold"), fg_color=Theme.SUCCESS, hover_color=Theme.SUCCESS_HOVER, corner_radius=8, command=self._abrir_crear_producto).pack(side="right")
         self.scroll_productos = ctk.CTkScrollableFrame(lista_frame, fg_color="transparent")
         self.scroll_productos.pack(fill="both", expand=True, padx=5, pady=5)
@@ -60,7 +60,7 @@ class CatalogView(ctk.CTkFrame):
                 
                 es_huerfano = meta.get("Categoria") == "Sin Categoría" or meta.get("Ubicacion") in ["Sin Asignar", "Pendiente de Gerencia"]
                 
-                from ui.theme import Theme
+                from ui.components.theme import Theme
                 bg_huerfano = "#FEF2F2" if self.modo == "Light" else "#451a1a"
                 border_huerfano = Theme.DANGER[0] if self.modo == "Light" else Theme.DANGER[1]
                 text_huerfano = "#B91C1C" if self.modo == "Light" else "#FCA5A5"

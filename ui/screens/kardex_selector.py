@@ -5,11 +5,11 @@ import os, json, random, re
 from datetime import datetime
 from PIL import Image
 from core.database import get_connection
-from ui.toast import show_toast
+from ui.components.toast import show_toast
 
 # Importamos las ventanas adicionales
-from ui.recepcion_masiva import RecepcionMasivaWindow
-from ui.vale_despacho import ValeDespachoWindow
+from ui.windows.recepcion_masiva import RecepcionMasivaWindow
+from ui.windows.vale_despacho import ValeDespachoWindow
 # PON ESTO:
 from ui.modals.alertas_window import AlertasWindow
 from ui.modals.zonas_window import ZonasWindow
@@ -120,7 +120,7 @@ class KardexSelector(ctk.CTkFrame):
         btn_despacho.grid(row=2, column=1, padx=(3, 0), pady=(3, 0), sticky="ew")
 
         # Fila 3: Preparar Receta
-        from ui.user_recipe_view import UserRecipeView
+        from ui.windows.user_recipe_view import UserRecipeView
         btn_receta = ctk.CTkButton(tools_frame, text="🍲 Preparar Receta / Fórmula", font=("Segoe UI", 13, "bold"), fg_color="#3B82F6", hover_color="#2563EB", text_color="#FFFFFF", height=35, command=lambda: UserRecipeView(self.master, self.current_user))
         btn_receta.grid(row=3, column=0, columnspan=2, pady=(5, 0), sticky="ew")
 

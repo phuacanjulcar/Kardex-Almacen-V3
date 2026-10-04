@@ -4,7 +4,7 @@ import sqlite3
 import os
 from PIL import Image
 from core.database import get_connection
-from ui.toast import show_toast
+from ui.components.toast import show_toast
 
 class CategoriasWindow(ctk.CTkToplevel):
     def __init__(self, master, current_user):

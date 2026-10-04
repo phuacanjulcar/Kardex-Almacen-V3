@@ -29,7 +29,7 @@ class MessageInboxWindow(ctk.CTkToplevel):
             variable=self.filtro_var, 
             command=self._switch_tab
         )
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         Theme.apply_segmented_button_style(self.filtro_btn)
         self.filtro_btn.grid(row=0, column=0, sticky="ew", padx=20, pady=(20, 0))
 

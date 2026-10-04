@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 import os
 import json
 from datetime import datetime
-from core.kardex_manager import KardexManager
+from core.managers.kardex_manager import KardexManager
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

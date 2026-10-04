@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from core.database import get_connection
-from core.kardex_manager import KardexManager
+from core.managers.kardex_manager import KardexManager
 import json
 from datetime import datetime
 from tkinter import ttk

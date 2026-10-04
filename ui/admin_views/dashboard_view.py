@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 from tkinter import ttk
 from ui.modals.alertas_window import AlertasWindow 
 from core.database import get_connection
-from ui.theme import Theme
+from ui.components.theme import Theme
 
 import matplotlib
 matplotlib.use("TkAgg")

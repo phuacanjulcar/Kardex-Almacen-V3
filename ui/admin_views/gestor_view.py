@@ -30,7 +30,7 @@ class GestorView(ctk.CTkFrame):
             variable=self.filtro_var, 
             command=self._cargar_lista
         )
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         Theme.apply_segmented_button_style(self.filtro_btn)
         self.filtro_btn.pack(fill="x", padx=20, pady=20)
 

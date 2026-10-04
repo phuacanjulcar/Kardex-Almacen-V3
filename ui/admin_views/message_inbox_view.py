@@ -31,7 +31,7 @@ class AdminMessageInboxView(ctk.CTkFrame):
             variable=self.filtro_var, 
             command=self._cargar_mensajes
         )
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         Theme.apply_segmented_button_style(self.filtro_btn)
         self.filtro_btn.pack(fill="x", padx=15, pady=15)
 

@@ -1,79 +1,31 @@
-import customtkinter as ctk
-import tkinter as tk
 import os
-
-from core.kardex_manager import KardexManager
-from core.user_manager import TxtUserManager
-from ui.login_screen import LoginScreen
-from ui.main_screen import MainScreen
-from ui.kardex_selector import KardexSelector  # ¡Aquí llamamos a nuestro nuevo archivo!
-from ui.admin_panel import AdminPanel
+import tkinter as tk
+import customtkinter as ctk
+import atexit
+import traceback
 
 from core.database import init_db, SecurityLayer
-import atexit
+from core.managers.kardex_manager import KardexManager
+from core.managers.user_manager import TxtUserManager
+from core.services.expiration_service import run_expiration_check_async
 
-# Descifrar la base de datos (At-Rest) antes de inicializar SQLite
-SecurityLayer.decrypt_db()
-
-# Asegurar que se cifre al cerrar la app
-atexit.register(SecurityLayer.encrypt_db)
-
-init_db()
-
-def check_expirations():
-    try:
-        from core.database import get_connection
-        from datetime import datetime
-        conn = get_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            SELECT p.name, a.lot_code, a.expiration_date, a.qty
-            FROM active_lots a
-            JOIN products p ON a.product_id = p.id
-            WHERE a.expiration_date != '' AND a.expiration_date IS NOT NULL AND a.qty > 0
-        """)
-        lots = cursor.fetchall()
-        
-        hoy = datetime.now()
-        for row in lots:
-            try:
-                fv = datetime.strptime(row['expiration_date'], "%Y-%m-%d")
-                dias = (fv - hoy).days
-                if 0 <= dias <= 15:
-                    reason = f"Alerta de Vencimiento: {row['name']}"
-                    doc_ref = row['lot_code']
-                    body = f"ALERTA CRÍTICA: El lote {row['lot_code']} del producto {row['name']} vencerá en {dias} días (Fecha: {row['expiration_date']}). Quedan {row['qty']} unidades."
-                    
-                    cursor.execute("SELECT id FROM messages WHERE sender = 'SISTEMA' AND reason = ? AND doc_reference = ?", (reason, doc_ref))
-                    if not cursor.fetchone():
-                        cursor.execute("""
-                            INSERT INTO messages (sender, receiver, doc_reference, reason, body, created_at, status)
-                            VALUES ('SISTEMA', 'Administrador', ?, ?, ?, ?, 'unread')
-                        """, (doc_ref, reason, body, hoy.strftime("%Y-%m-%d %H:%M:%S")))
-                        conn.commit()
-            except Exception: pass
-        conn.close()
-    except Exception as e:
-        print(f"Error en check_expirations: {e}")
-
-check_expirations()
+from ui.screens.login_screen import LoginScreen
+from ui.screens.main_screen import MainScreen
+from ui.screens.kardex_selector import KardexSelector
+from ui.screens.admin_panel import AdminPanel
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-class App:
+class AppRouter:
+    """
+    Gestor principal de la aplicación.
+    Encargado del enrutamiento de vistas y mantenimiento del estado global (sesión).
+    """
     def __init__(self, root):
         self.root = root
-        
-        # Gestor global de errores de Tkinter para evitar cierres abruptos
-        def _handle_exception(exc, val, tb):
-            err_msg = str(val).lower()
-            if isinstance(val, tk.TclError) and ("bad window path name" in err_msg or "invalid command name" in err_msg): pass
-            else:
-                import traceback
-                traceback.print_exception(exc, val, tb)
-        self.root.report_callback_exception = _handle_exception
+        self._setup_global_exception_handler()
 
+        # Estado global (Session)
         self.user_manager = TxtUserManager()
         self.kardex_path = None
         self.manager = None
@@ -82,19 +34,31 @@ class App:
         # Iniciamos el flujo de la aplicación
         self.show_login()
 
+    def _setup_global_exception_handler(self):
+        def _handle_exception(exc, val, tb):
+            err_msg = str(val).lower()
+            if isinstance(val, tk.TclError) and ("bad window path name" in err_msg or "invalid command name" in err_msg): 
+                pass
+            else:
+                traceback.print_exception(exc, val, tb)
+        self.root.report_callback_exception = _handle_exception
+
     def clear_window(self):
+        """Limpia los widgets actuales para cargar una nueva vista de forma limpia."""
         for w in self.root.winfo_children(): 
-            try: w.destroy()
-            except: pass
+            try: 
+                w.destroy()
+            except Exception: 
+                pass
+
+    # --- RUTAS DE LA APLICACIÓN ---
 
     def show_login(self):
         self.clear_window()
         self.show_login_screen_after_license("PERMANENT")
 
-    # Modificamos esta función para que reciba el 'status'
     def show_login_screen_after_license(self, status):
         self.clear_window()
-        # Le enviamos el parámetro trial_status a la ventana de Login
         LoginScreen(self.root, self.on_login, self.on_guest, user_manager=self.user_manager, trial_status=status)
 
     def on_login(self, username):
@@ -107,9 +71,7 @@ class App:
 
     def show_admin_panel(self):
         self.clear_window()
-        # Le pasamos el 'self.user_manager' al final
         AdminPanel(self.root, self.current_user, self.logout, self.user_manager).pack(fill="both", expand=True)
-
 
     def on_guest(self):
         self.current_user = "Invitado"
@@ -117,7 +79,6 @@ class App:
 
     def show_selector(self):
         self.clear_window()
-        # Aquí se instancia la pantalla limpia que acabamos de modularizar
         KardexSelector(self.root, self.select_kardex, self.current_user, self.logout)
 
     def select_kardex(self, filepath):
@@ -133,7 +94,17 @@ class App:
         self.current_user = None
         self.show_login()
 
-if __name__ == "__main__":
+
+def main():
+    # 1. Configuración de Seguridad y Base de Datos
+    SecurityLayer.decrypt_db()
+    atexit.register(SecurityLayer.encrypt_db)
+    init_db()
+
+    # 2. Tareas en segundo plano (Evita bloqueos en el hilo principal)
+    run_expiration_check_async()
+
+    # 3. Configuración de la Ventana Principal de la UI
     ctk.set_appearance_mode("Light")
     root = ctk.CTk() 
     root.geometry("1050x770") 
@@ -149,5 +120,10 @@ if __name__ == "__main__":
         os._exit(0)
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
-    App(root)
+    
+    # 4. Iniciar el Enrutador y Bucle de la App
+    app = AppRouter(root)  # Mantenemos viva la referencia del router y variables
     root.mainloop()
+
+if __name__ == "__main__":
+    main()

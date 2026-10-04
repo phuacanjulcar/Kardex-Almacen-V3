@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 import os
 import json
 from datetime import datetime
-from core.kardex_manager import KardexManager
+from core.managers.kardex_manager import KardexManager
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -55,7 +55,7 @@ class RecepcionMasivaWindow(ctk.CTkToplevel):
         row_header_1 = ctk.CTkFrame(header_frame, fg_color="transparent")
         row_header_1.pack(fill="x", padx=20, pady=(0, 10))
         
-        from ui.tooltip import crear_label_con_ayuda
+        from ui.components.tooltip import crear_label_con_ayuda
         
         crear_label_con_ayuda(row_header_1, "N° Guía/Doc:", "El código oficial del papel que acompaña la mercadería (ej. Factura F001-23).", font=("Segoe UI", 12)).pack(side="left")
         self.entry_doc = ctk.CTkEntry(row_header_1, width=130, placeholder_text="Ej: TS01-00000022")

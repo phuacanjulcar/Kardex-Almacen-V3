@@ -1,9 +1,9 @@
 import customtkinter as ctk
 from tkinter import ttk, messagebox
 import os
-from ui.entry_window import EntryWindow
-from ui.exit_window import ExitWindow
-from ui.theme import Theme
+from ui.windows.entry_window import EntryWindow
+from ui.windows.exit_window import ExitWindow
+from ui.components.theme import Theme
 
 class MainScreen(ctk.CTkFrame):
     def __init__(self, master, manager, current_user, on_logout, on_back):
@@ -319,11 +319,11 @@ class MainScreen(ctk.CTkFrame):
     def _open_exit(self):
         if self.current_user == "Invitado":
             return messagebox.showerror("Acceso Denegado", "Los invitados solo pueden visualizar información.")
-        from ui.exit_window import ExitWindow
+        from ui.windows.exit_window import ExitWindow
         ExitWindow(self, self.manager, self.current_user, self.refresh_data)
 
     def _open_message_inbox(self):
-        from ui.message_inbox_window import MessageInboxWindow
+        from ui.windows.message_inbox_window import MessageInboxWindow
         doc_ref = ""
         sel = self.tree.selection()
         if sel:

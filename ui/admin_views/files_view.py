@@ -5,7 +5,7 @@ import csv
 import threading
 from tkinter import messagebox
 from ui.modals.cloud_sync_modal import CloudSyncModal
-from core.cloud_sync import NeonSyncEngine
+from core.services.cloud_sync import NeonSyncEngine
 
 class FilesView(ctk.CTkFrame):
     def __init__(self, parent, controller, base_dir):
@@ -175,7 +175,7 @@ class FilesView(ctk.CTkFrame):
         
         try:
             from core.database import get_connection
-            from core.pdf_generator import PDFGenerator
+            from core.services.pdf_generator import PDFGenerator
             from tkinter.filedialog import asksaveasfilename
             
             conn = get_connection()

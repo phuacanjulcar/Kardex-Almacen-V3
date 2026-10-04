@@ -14,7 +14,7 @@ class EntryWindow:
         self.win.geometry("500x650")
         self.win.grab_set()
 
-        from ui.theme import Theme
+        from ui.components.theme import Theme
         self.win.configure(fg_color=Theme.BG_GENERAL)
 
         form = ctk.CTkFrame(self.win, fg_color="transparent")
