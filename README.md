@@ -1,15 +1,15 @@
 # Kardex Almacén - V3 (Fase 2.1)
 
-## 📌 Resumen del Proyecto
+## Resumen del Proyecto
 **Kardex Almacén** es un sistema de gestión de inventarios (Kardex), control de lotes y despachos diseñado específicamente para entornos de operatividad aislada. El sistema provee control de accesos, gestión de caducidades, paneles de administración y auditoría de movimientos sin depender de conectividad externa.
 
 ---
 
-## 🏗️ Arquitectura y Estructura Completa
+## Arquitectura y Estructura Completa
 
 La aplicación sigue una arquitectura **Modular basada en Capas** adaptada para Escritorio (Desktop MVC). Todo el estado se mantiene en un router (`AppRouter`) que coordina la interfaz gráfica (UI), mientras que la lógica pesada y bases de datos se abstraen en la capa `core`.
 
-### Bosquejo de Arquitectura (Componentes y Flujos)
+### Bosquejo de Arquitectura: Los componente y el flujo del código
 
 ```mermaid
 flowchart TD
@@ -44,16 +44,16 @@ flowchart TD
 
 ---
 
-## 📂 Estructura de Directorios
+## Estructura de los Directorios
 
 ```text
 Kardex-Almacen-V3/
 ├── main.py                # Punto de entrada de la aplicación y enrutador.
-├── core/                  # [Capa Lógica] Algoritmos y datos.
+├── core/                  # La capa lógica, Algoritmos y datos.
 │   ├── database.py        # Configuración de base de datos local y cifrado.
 │   ├── managers/          # Gestores de Lógica de Negocio (Kardex, Usuarios).
 │   └── services/          # Servicios independientes (Alertas, Cloud Sync, PDF).
-└── ui/                    # [Capa de Presentación]
+└── ui/                    # La capa de presentación de la app
     ├── screens/           # Ventanas raíz del enrutador (Login, Admin, Main).
     ├── windows/           # Ventanas de procesos (Recepciones, Vales, Salidas).
     ├── modals/            # Popups de interacción bloqueante (Categorías, Zonas).
@@ -64,7 +64,7 @@ Kardex-Almacen-V3/
 
 ---
 
-## 🔄 Ciclos, Iteraciones y Flujos Internos
+## Los Ciclos, Iteraciones y Flujos Internos
 
 La aplicación opera a través de múltiples ciclos asíncronos y flujos bloqueantes para garantizar rendimiento:
 
@@ -91,13 +91,13 @@ La aplicación opera a través de múltiples ciclos asíncronos y flujos bloquea
 
 ---
 
-## 📡 Justificación Arquitectónica: ¿Por qué NO usar la Nube? (Offline-First)
+## La Justificación de la Arquitectura: ¿Por qué NO se aplica la Nube? (Offline-First)
 
-En la actualidad, el estándar de la industria es alojar las bases de datos en la Nube (AWS, Firebase, Google Cloud). Sin embargo, este proyecto se estructuró con **SQLite Integrado y Almacenamiento Local (Offline-First)** por una razón de peso operativo:
+En la actualidad, el estándar de la industria es alojar las bases de datos en la Nube como ejemplo son AWS, Firebase, Google Cloude, entre otros. Sin embargo, este proyecto se estructuró con **SQLite Integrado y Almacenamiento Local (Offline-First)** por una razón de peso operativo:
 
 1. **Aislamiento de Señal (Cero Conectividad):**
-   - El despliegue de la aplicación ocurre en almacenes e infraestructuras cerradas donde las paredes bloquean por completo la señal de internet y la conectividad WiFi/4G.
-   - Una arquitectura en la nube (SaaS) habría causado un **100% de inoperatividad** al no poder registrar entradas/salidas en el momento real de las operaciones de almacén.
+   - El despliegue de la aplicación ocurre en almacenes e infraestructuras cerradas donde las paredes bloquean por parcialmente o ,en en este caso, completamente la señal de internet y la conectividad WiFi/4G.
+   - Una arquitectura en la nube (SaaS) habría causado un **100% de inoperatividad** al no poder registrar entradas/salidas en el momento real de las operaciones de almacén siendo inviable.
 
 2. **Alta Disponibilidad y Baja Latencia:**
    - Todo registro, consulta y guardado es atómico e instantáneo al estar en el mismo disco, optimizando la lectura por escáner o teclado rápido.
@@ -107,10 +107,16 @@ En la actualidad, el estándar de la industria es alojar las bases de datos en l
 
 ---
 
-## 🚀 Proyecciones Futuras (Escalabilidad)
+## Proyecciones Futuras (Escalabilidad)
 
 Al estar el código desacoplado (UI separada de Base de Datos y Servicios), la "Fase 3" o posteriores pueden incluir sin refactorizaciones masivas:
 
 - **Red de Área Local (LAN):** Transformar `database.py` para que lea de un servidor PostgreSQL alojado en una PC "Maestra" dentro del almacén conectado por cable Ethernet, permitiendo múltiples computadoras esclavas sin depender de internet.
 - **Reporting Automático:** El `ExpirationService` puede ampliarse para usar iteraciones periódicas (ej. cada hora) en background para auto-generar reportes en PDF y guardarlos en una carpeta designada.
 - **Micro-actualizaciones (OTA offline):** A través del empaquetador del instalador, inyectar un actualizador de binarios que corra scripts de migración SQLite de forma invisible para el usuario.
+
+### En caso se habilite la Conexión a Internet
+- **Integración de la Nube:** Lo  mas urgente, convertir la `database.py` 
+
+
+
